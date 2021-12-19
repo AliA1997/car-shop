@@ -1,0 +1,162 @@
+[
+  {
+    "id": 0,
+    "lot_number": 1,
+    "picture": "images/1998 Jeep Wrangler.jpg",
+    "year": 1998,
+    "make": "Jeep",
+    "model": "Wrangler",
+    "down_payment": 2000,
+    "price": 8000
+  },
+  {
+    "id": 1,
+    "lot_number": 2,
+    "picture": "images/2005 BMW 745li.jpg",
+    "year": 2005,
+    "make": "BMW",
+    "model": "745li",
+    "down_payment": 1500,
+    "price": 7000
+  },
+  {
+    "id": 2,
+    "lot_number": 3,
+    "picture": "images/2005 Honda Civic.jpg",
+    "year": 2005,
+    "make": "Honda",
+    "model": "Civic",
+    "down_payment": 500,
+    "price": 2500
+  },
+  {
+    "id": 3,
+    "lot_number": 4,
+    "picture": "images/2012 Mercedes-Benz C250.jpg",
+    "year": 2012,
+    "make": "Mercedes-Benz",
+    "model": "C250",
+    "down_payment": 4000,
+    "price": 14000
+  },
+  {
+    "id": 4,
+    "lot_number": 5,
+    "picture": "images/2012 Nissan Altima.jpg",
+    "year": 2012,
+    "make": "Nissan",
+    "model": "Altima",
+    "down_payment": 2000,
+    "price": 12000
+  },
+  {
+    "id": 5,
+    "lot_number": 6,
+    "picture": "images/2015 Nissan Sentra.jpg",
+    "year": 2015,
+    "make": "Nissan",
+    "model": "Sentra",
+    "down_payment": 3000,
+    "price": 10000
+  },
+  {
+    "id": 6,
+    "lot_number": 7,
+    "picture": "images/2012 Mercedes-Benz C250.jpg",
+    "year": 2012,
+    "make": "Mercedes-Benz",
+    "model": "C250",
+    "down_payment": 4000,
+    "price": 14000
+  },
+  {
+    "id": 7,
+    "lot_number": 8,
+    "picture": "images/2005 Honda Civic.jpg",
+    "year": 2005,
+    "make": "Honda",
+    "model": "Civic",
+    "down_payment": 500,
+    "price": 2500
+  },
+  {
+    "id": 8,
+    "lot_number": 9,
+    "picture": "images/2005 BMW 745li.jpg",
+    "year": 2005,
+    "make": "BMW",
+    "model": "745li",
+    "down_payment": 1500,
+    "price": 7000
+  },
+  {
+    "id": 9,
+    "lot_number": 10,
+    "picture": "images/1998 Jeep Wrangler.jpg",
+    "year": 1998,
+    "make": "Jeep",
+    "model": "Wrangler",
+    "down_payment": 2000,
+    "price": 8000
+  },
+  {
+    "id": 10,
+    "lot_number": 11,
+    "picture": "images/2012 Nissan Altima.jpg",
+    "year": 2012,
+    "make": "Nissan",
+    "model": "Altima",
+    "down_payment": 2000,
+    "price": 12000
+  },
+  {
+    "id": 11,
+    "lot_number": 12,
+    "picture": "images/2015 Nissan Sentra.jpg",
+    "year": 2015,
+    "make": "Nissan",
+    "model": "Sentra",
+    "down_payment": 3000,
+    "price": 10000
+  },
+  {
+    "id": 12,
+    "lot_number": 13,
+    "picture": "images/2012 Nissan Altima.jpg",
+    "year": 2012,
+    "make": "Nissan",
+    "model": "Altima",
+    "down_payment": 2000,
+    "price": 12000
+  },
+  {
+    "id": 13,
+    "lot_number": 14,
+    "picture": "images/1998 Jeep Wrangler.jpg",
+    "year": 1998,
+    "make": "Jeep",
+    "model": "Wrangler",
+    "down_payment": 2000,
+    "price": 8000
+  },
+  {
+    "id": 14,
+    "lot_number": 15,
+    "picture": "images/2012 Nissan Altima.jpg",
+    "year": 2012,
+    "make": "Nissan",
+    "model": "Altima",
+    "down_payment": 2000,
+    "price": 12000
+  },
+  {
+    "id": 15,
+    "lot_number": 16,
+    "picture": "images/1998 Jeep Wrangler.jpg",
+    "year": 1998,
+    "make": "Jeep",
+    "model": "Wrangler",
+    "down_payment": 2000,
+    "price": 8000
+  }
+]
