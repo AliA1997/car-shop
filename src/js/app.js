@@ -9,6 +9,7 @@ App = {
       var carTemplate = $("#carTemplate");
       App.carTemplate = carTemplate;
       for (i = 0; i < data.length; i++) {
+        carTemplate.find(".panel-car").attr("id", data[i].id);
         carTemplate
           .find(".panel-title")
           .text(data[i].year + " " + data[i].make + " " + data[i].model);
@@ -19,9 +20,7 @@ App = {
         carTemplate.find(".car-lot_number").text(data[i].lot_number);
         carTemplate.find(".car-down_payment").text(data[i].down_payment);
         carTemplate.find(".car-price").text(data[i].price);
-        carTemplate
-          .find(".btn-buy")
-          .attr("data-id", data[i].id);
+        carTemplate.find(".btn-buy").attr("data-id", data[i].id);
 
         carsRow.append(carTemplate.html());
       }
@@ -85,7 +84,7 @@ App = {
       .then(async function (instance) {
         sellerInstance = instance;
         const isSeeded = await sellerInstance.isSeeded();
-        if(isSeeded) {
+        if (isSeeded) {
           $.getJSON("../cars.json", function (cars) {
             console.log("cars:", cars);
             sellerInstance.setCar(
@@ -94,15 +93,22 @@ App = {
             );
           });
         } else {
-          const cars = await sellerInstance.getCars(); 
-          for(let i = 1; i < 16; i++) {
+          const cars = await sellerInstance.getCars();
+          for (let i = 1; i < 16; i++) {
             const isCarSold = cars[i - 1];
-            const carBuyBtn = App.carTemplate.find('.btn-buy').attr('id', i);
-            const isAvailableElement = carBuyBtn.parent().find('.car-is-available');
-            debugger;
-            isAvailableElement.text(isCarSold ? 'No' : 'Yes');
-            isAvailableElement.attr('style', isCarSold ? 'color: red;' : 'color: black;');
-            carBuyBtn.attr('display', isCarSold ? 'none' : 'initial');
+            const carBuyBtn = $(`div#${i} > .panel-body > .btn-buy`);
+            const isAvailableElement = $(
+              `div#${i} > .panel-body > .car-is-available`
+            );
+            isAvailableElement.text(isCarSold ? "No" : "Yes");
+            isAvailableElement.attr(
+              "style",
+              isCarSold ? "color: red;" : "color: black;"
+            );
+            carBuyBtn.attr(
+              "style",
+              isCarSold ? "display: none;" : "display: initial;"
+            );
           }
         }
       })
@@ -127,7 +133,7 @@ App = {
         sellerInstance = instance;
         const car = await sellerInstance.cars(carId);
         console.log("BUY CAR:", car[0]);
-        sellerInstance.markAsSold(carId);
+        sellerInstance.markAsSold(carId - 1);
       });
     });
   },
