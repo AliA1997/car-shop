@@ -7,7 +7,7 @@ App = {
     $.getJSON("../cars.json", function (data) {
       var carsRow = $("#carsRow");
       var carTemplate = $("#carTemplate");
-
+      App.carTemplate = carTemplate;
       for (i = 0; i < data.length; i++) {
         carTemplate
           .find(".panel-title")
@@ -21,7 +21,7 @@ App = {
         carTemplate.find(".car-price").text(data[i].price);
         carTemplate
           .find(".btn-buy")
-          .attr("data-id", data[i].id + "," + data[i].down_payment);
+          .attr("data-id", data[i].id);
 
         carsRow.append(carTemplate.html());
       }
@@ -31,43 +31,44 @@ App = {
   },
 
   initWeb3: async function () {
+    // Modern dapp browsers...
     if (window.ethereum) {
-      console.log("IF STATEMENT");
-      App.web3Provider = new Web3(window.ethereum);
+      App.web3Provider = window.ethereum;
       try {
-        await window.ethereum.enable();
+        // Request account access
+        await window.ethereum.request({ method: "eth_requestAccounts" });
       } catch (error) {
-        console.log("Denied account user");
+        // User denied account access...
+        console.error("User denied account access");
       }
-    } else if (window.web3) {
-      App.web3Provider = window.web3.currentProvider;
-    } else {
-      console.log("ELSE STATEMENT");
-      const provider = new Web3.providers.HttpProvider("http://localhost:7545");
-      App.web3Provider = new Web3(provider);
     }
-    web3 = App.web3Provider;
+    // Legacy dapp browsers...
+    else if (window.web3) {
+      App.web3Provider = window.web3.currentProvider;
+    }
+    // If no injected web3 instance is detected, fall back to Ganache
+    else {
+      App.web3Provider = new Web3.providers.HttpProvider(
+        "http://localhost:7545"
+      );
+    }
+    web3 = new Web3(App.web3Provider);
     return App.initContract();
   },
 
   initContract: function () {
-    $.getJSON("CarToken.json", function (data) {
-      var CarArtifact = data;
-      App.contracts.CarToken = new App.web3Provider.eth.Contract(
-        CarArtifact.abi,
-        CarArtifact.networks["5777"].address
-      );
-    });
-
     $.getJSON("Seller.json", function (data) {
       // Get the necessary contract artifact file and instantiate it with @truffle/contract
       var SellerArtifact = data;
-      App.contracts.Seller = new App.web3Provider.eth.Contract(
-        SellerArtifact.abi,
-        SellerArtifact.networks["5777"].address
-      );
+
+      App.contracts.Seller = TruffleContract(SellerArtifact);
+      // Set the provider for our contract
+      App.contracts.Seller.setProvider(App.web3Provider);
+      App.contracts.Seller.defaults({
+        from: "0xFEfE2b200BEAac5EB464D4850f391D679EDf7B25",
+      });
       // Use our contract to retrieve and mark the adopted pets
-      return App.markBought();
+      return App.setCars();
     });
 
     return App.bindEvents();
@@ -77,42 +78,57 @@ App = {
     $(document).on("click", ".btn-buy", App.handleBuy);
   },
 
-  markBought: function () {
+  setCars: function () {
     let sellerInstance;
 
-    web3.eth.getAccounts(async function (error, accounts) {
-      const account = accounts[0];
-      const cars = await App.contracts.Seller.methods.getCars().call();
-      console.log("cars", cars);
-    });
-
-    return App.bindEvents();
+    App.contracts.Seller.deployed()
+      .then(async function (instance) {
+        sellerInstance = instance;
+        const isSeeded = await sellerInstance.isSeeded();
+        if(isSeeded) {
+          $.getJSON("../cars.json", function (cars) {
+            console.log("cars:", cars);
+            sellerInstance.setCar(
+              cars.map((c) => c.id),
+              cars.map((c) => c.down_payment)
+            );
+          });
+        } else {
+          const cars = await sellerInstance.getCars(); 
+          for(let i = 1; i < 16; i++) {
+            const isCarSold = cars[i - 1];
+            const carBuyBtn = App.carTemplate.find('.btn-buy').attr('id', i);
+            const isAvailableElement = carBuyBtn.parent().find('.car-is-available');
+            debugger;
+            isAvailableElement.text(isCarSold ? 'No' : 'Yes');
+            isAvailableElement.attr('style', isCarSold ? 'color: red;' : 'color: black;');
+            carBuyBtn.attr('display', isCarSold ? 'none' : 'initial');
+          }
+        }
+      })
+      .catch(function (error) {
+        console.log("Error setting cars!", error);
+      });
   },
 
   handleBuy: function (event) {
     event.preventDefault();
+    console.log("event.target handleBuy:", event.target);
 
     var carId = parseInt($(event.target).data("id"));
 
-    event.preventDefault();
-
-    var carId = parseInt($(event.target).data("id"));
-    var downPayment = parseInt($(event.target).data("down_payment"));
-
-    web3.eth.getAccounts(function (error, accounts) {
+    web3.eth.getAccounts(function (error) {
       if (error) {
         console.log(error);
       }
 
-      var account = accounts[0];
-
-      console.log("App.contracts:", App.contracts);
-      try {
-
-        App.contracts.Seller.methods.buy(carId, downPayment).send({ from: account });
-      } catch(err) {
-        console.log(err.message);
-      }
+      let sellerInstance;
+      App.contracts.Seller.deployed().then(async function (instance) {
+        sellerInstance = instance;
+        const car = await sellerInstance.cars(carId);
+        console.log("BUY CAR:", car[0]);
+        sellerInstance.markAsSold(carId);
+      });
     });
   },
 };

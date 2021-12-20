@@ -1,24 +1,25 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.0;
+pragma solidity ^0.4.24;
 
 import "./Seller.sol";
 
 contract CarAd {
     
-    Seller sellerContract;
+    address sellerContractAddress;
     uint public id;
     uint public downPayment;
     bool public isPaid;
 
-    constructor(Seller _sellerContract, uint _id) public {
-        sellerContract = _sellerContract;
+    constructor(Seller _sellerContract, uint _id, uint _downPayment) public {
+        sellerContractAddress = address(_sellerContract);
         id = _id;
+        downPayment = _downPayment;
     }
 
-    receive() external payable {
+    function() public payable {
         require(downPayment == msg.value, "Value is not equal to down payment");
         isPaid = true;
-        (bool success, ) = address(sellerContract).call{value: msg.value}(abi.encodeWithSignature("buy)uint)", id));
-        require(success, "Purchase not successful");
+        Seller seller = Seller(sellerContractAddress);
+        seller.markAsSold(id);
     }
 }
